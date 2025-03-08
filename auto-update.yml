@@ -1,0 +1,32 @@
+name: Auto Update and Commit
+
+on:
+  schedule:
+    - cron: "0 * * * *"  # Runs every hour (adjust as needed)
+  push:
+    branches:
+      - main  # Runs when changes are pushed to the main branch
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  update-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions@github.com"
+
+      - name: Make changes
+        run: |
+          echo "Last updated on $(date)" > status.txt
+          
+      - name: Commit and Push Changes
+        run: |
+          git add .
+          git commit -m "Auto update: $(date)"
+          git push
